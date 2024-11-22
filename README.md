@@ -6,4 +6,5 @@
 cd Backend
 source venv/bin/activate
 cd Documentation
+mkdocs serve
 ```
