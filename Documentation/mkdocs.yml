@@ -1,0 +1,14 @@
+site_name: Backend Documentation
+
+nav:
+  - Home: index.md
+  - Database Schema: database.md
+
+theme: readthedocs
+
+markdown_extensions:
+  - admonition                      # Adds support for `!!! note`, `!!! tip`, etc.
+  - codehilite                      # Syntax highlighting for code blocks
+  - footnotes                       # Support for footnotes
+  - toc:
+      permalink: true               # Adds permalinks for table of contents headings
