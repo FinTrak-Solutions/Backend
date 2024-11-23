@@ -2,6 +2,7 @@ site_name: Backend Documentation
 
 nav:
   - Home: index.md
+  - Authentication: authentication.md
   - Database Schema: database.md
 
 theme: readthedocs

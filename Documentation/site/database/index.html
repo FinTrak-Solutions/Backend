@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Database Schema - Backend Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Database Schema";
+        var mkdocs_page_input_path = "database.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Backend Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../authentication/">Authentication</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Database Schema</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#user-table">User Table</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#schema">Schema</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#account-table">Account Table</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#description_1">Description</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#schema_1">Schema</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#enumerations">Enumerations</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_1">Notes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#transaction-table">Transaction Table</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#description_2">Description</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#schema_2">Schema</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_2">Notes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#budget-table">Budget Table</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#description_3">Description</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#schema_3">Schema</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#enumerations_1">Enumerations</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_3">Notes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#category-table">Category Table</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#description_4">Description</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#schema_4">Schema</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#notes_4">Notes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#summary-of-updates">Summary of Updates</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Backend Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Database Schema</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="database-schema-documentation">Database Schema Documentation<a class="headerlink" href="#database-schema-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>This document outlines the updated database schema for the financial tracker 
+application backend, utilizing Rust Rocket for REST API handling, Diesel for database interaction, 
+and PostgreSQL as the database. The schema is designed to efficiently store and manage <code>user information</code>, 
+<code>financial accounts</code>, <code>transactions</code>, <code>budgets</code>, and <code>categories</code>, ensuring data scalability.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#user-table">User Table</a></li>
+<li><a href="#account-table">Account Table</a></li>
+<li><a href="#transaction-table">Transaction Table</a></li>
+<li><a href="#budget-table">Budget Table</a></li>
+<li><a href="#category-table">Category Table</a></li>
+<li><a href="#summary-of-updates">Summary of Updates</a></li>
+</ol>
+<hr />
+<h2 id="user-table">User Table<a class="headerlink" href="#user-table" title="Permanent link">&para;</a></h2>
+<h3 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h3>
+<p>Stores user credentials and personal information. Each user is uniquely identified and can have multiple accounts and budgets associated with them.</p>
+<h3 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>SERIAL</code></td>
+<td>Primary Key</td>
+<td>Unique identifier for each user.</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>VARCHAR(255)</code></td>
+<td>Unique, Not Null</td>
+<td>User's email address.</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>VARCHAR(255)</code></td>
+<td>Not Null</td>
+<td>Hashed password for security.</td>
+</tr>
+<tr>
+<td><code>first_name</code></td>
+<td><code>VARCHAR(50)</code></td>
+<td>Optional</td>
+<td>User's first name.</td>
+</tr>
+<tr>
+<td><code>last_name</code></td>
+<td><code>VARCHAR(50)</code></td>
+<td>Optional</td>
+<td>User's last name.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Default <code>NOW()</code></td>
+<td>Account creation timestamp.</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Default <code>NOW()</code>, On Update</td>
+<td>Last account update timestamp.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Password Security</strong>: Passwords must be stored securely using a hashing algorithm like bcrypt.</li>
+<li><strong>Email Uniqueness</strong>: Enforce a unique constraint to prevent duplicate accounts.</li>
+</ul>
+<hr />
+<h2 id="account-table">Account Table<a class="headerlink" href="#account-table" title="Permanent link">&para;</a></h2>
+<h3 id="description_1">Description<a class="headerlink" href="#description_1" title="Permanent link">&para;</a></h3>
+<p>Represents financial accounts linked to users, such as bank accounts or credit cards. Each account belongs to a user and holds financial transactions.</p>
+<h3 id="schema_1">Schema<a class="headerlink" href="#schema_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_id</code></td>
+<td><code>SERIAL</code></td>
+<td>Primary Key</td>
+<td>Unique identifier for each account.</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>INTEGER</code></td>
+<td>Foreign Key (<code>User.id</code>), Not Null</td>
+<td>Identifier of the account owner.</td>
+</tr>
+<tr>
+<td><code>bank_name</code></td>
+<td><code>VARCHAR(100)</code></td>
+<td>Optional</td>
+<td>Name of the financial institution.</td>
+</tr>
+<tr>
+<td><code>account_number</code></td>
+<td><code>VARCHAR(50)</code></td>
+<td>Optional, Unique</td>
+<td>Account number from the bank.</td>
+</tr>
+<tr>
+<td><code>account_type</code></td>
+<td><code>ACCOUNT_TYPE_ENUM</code></td>
+<td>Not Null</td>
+<td>Type of account (<code>Credit</code>, <code>Debit</code>, <code>Saving</code>).</td>
+</tr>
+<tr>
+<td><code>currency</code></td>
+<td><code>VARCHAR(10)</code></td>
+<td>Default <code>'CAD'</code></td>
+<td>Currency type of the account balance.</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Default <code>NOW()</code></td>
+<td>Account creation timestamp.</td>
+</tr>
+<tr>
+<td><code>updated_at</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Default <code>NOW()</code>, On Update</td>
+<td>Last account update timestamp.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="enumerations">Enumerations<a class="headerlink" href="#enumerations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ACCOUNT_TYPE_ENUM</strong>: An enumeration with values <code>'Credit'</code>, <code>'Debit'</code>, <code>'Saving'</code>.</li>
+</ul>
+<h3 id="notes_1">Notes<a class="headerlink" href="#notes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Foreign Key Constraint</strong>: <code>user_id</code> references <code>User.id</code> to establish ownership.</li>
+<li><strong>Account Balance Calculation</strong>: It's recommended to calculate account balance dynamically from transactions to maintain consistency.</li>
+</ul>
+<hr />
+<h2 id="transaction-table">Transaction Table<a class="headerlink" href="#transaction-table" title="Permanent link">&para;</a></h2>
+<h3 id="description_2">Description<a class="headerlink" href="#description_2" title="Permanent link">&para;</a></h3>
+<p>Logs all financial transactions associated with accounts. Each transaction records details like amount, timestamp, and category.</p>
+<h3 id="schema_2">Schema<a class="headerlink" href="#schema_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transaction_id</code></td>
+<td><code>SERIAL</code></td>
+<td>Primary Key</td>
+<td>Unique identifier for each transaction.</td>
+</tr>
+<tr>
+<td><code>account_id</code></td>
+<td><code>INTEGER</code></td>
+<td>Foreign Key (<code>Account.account_id</code>), Not Null</td>
+<td>Associated account.</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td><code>DECIMAL(15, 2)</code></td>
+<td>Not Null</td>
+<td>Transaction amount (positive or negative).</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TIMESTAMP</code></td>
+<td>Default <code>NOW()</code></td>
+<td>Transaction timestamp.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>TEXT</code></td>
+<td>Optional</td>
+<td>Additional details about the transaction.</td>
+</tr>
+<tr>
+<td><code>category_id</code></td>
+<td><code>INTEGER</code></td>
+<td>Foreign Key (<code>Category.category_id</code>)</td>
+<td>Category classification.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes_2">Notes<a class="headerlink" href="#notes_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Amount Significance</strong>: Positive amounts indicate deposits; negative amounts indicate withdrawals.</li>
+<li><strong>Foreign Key Constraints</strong>:<ul>
+<li><code>account_id</code> references <code>Account.account_id</code>.</li>
+<li><code>category_id</code> references <code>Category.category_id</code>.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="budget-table">Budget Table<a class="headerlink" href="#budget-table" title="Permanent link">&para;</a></h2>
+<h3 id="description_3">Description<a class="headerlink" href="#description_3" title="Permanent link">&para;</a></h3>
+<p>Defines budget limits and expectations for users, potentially per category and over specific time periods.</p>
+<h3 id="schema_3">Schema<a class="headerlink" href="#schema_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>budget_id</code></td>
+<td><code>SERIAL</code></td>
+<td>Primary Key</td>
+<td>Unique identifier for each budget.</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>INTEGER</code></td>
+<td>Foreign Key (<code>User.id</code>), Not Null</td>
+<td>Owner of the budget.</td>
+</tr>
+<tr>
+<td><code>category_id</code></td>
+<td><code>INTEGER</code></td>
+<td>Foreign Key (<code>Category.category_id</code>), Optional</td>
+<td>Category for the budget.</td>
+</tr>
+<tr>
+<td><code>limit_amount</code></td>
+<td><code>DECIMAL(15, 2)</code></td>
+<td>Not Null</td>
+<td>Maximum spending limit.</td>
+</tr>
+<tr>
+<td><code>expectation_amount</code></td>
+<td><code>DECIMAL(15, 2)</code></td>
+<td>Optional</td>
+<td>Expected spending or saving goal.</td>
+</tr>
+<tr>
+<td><code>frequency</code></td>
+<td><code>FREQUENCY_ENUM</code></td>
+<td>Not Null</td>
+<td>Budget period (<code>Daily</code>, <code>Weekly</code>, <code>Monthly</code>, <code>Yearly</code>).</td>
+</tr>
+<tr>
+<td><code>start_date</code></td>
+<td><code>DATE</code></td>
+<td>Optional</td>
+<td>Budget period start date.</td>
+</tr>
+<tr>
+<td><code>end_date</code></td>
+<td><code>DATE</code></td>
+<td>Optional</td>
+<td>Budget period end date.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="enumerations_1">Enumerations<a class="headerlink" href="#enumerations_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>FREQUENCY_ENUM</strong>: An enumeration with values <code>'Daily'</code>, <code>'Weekly'</code>, <code>'Monthly'</code>, <code>'Yearly'</code>.</li>
+</ul>
+<h3 id="notes_3">Notes<a class="headerlink" href="#notes_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Per-Category Budgets</strong>: If <code>category_id</code> is set, the budget applies to that category; otherwise, it may apply to overall spending.</li>
+<li><strong>Date Fields</strong>: <code>start_date</code> and <code>end_date</code> define custom budget periods if needed.</li>
+</ul>
+<hr />
+<h2 id="category-table">Category Table<a class="headerlink" href="#category-table" title="Permanent link">&para;</a></h2>
+<h3 id="description_4">Description<a class="headerlink" href="#description_4" title="Permanent link">&para;</a></h3>
+<p>Provides a way to classify transactions and budgets into categories, allowing for detailed financial tracking and reporting.</p>
+<h3 id="schema_4">Schema<a class="headerlink" href="#schema_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Constraints</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>category_id</code></td>
+<td><code>SERIAL</code></td>
+<td>Primary Key</td>
+<td>Unique identifier for each category.</td>
+</tr>
+<tr>
+<td><code>user_id</code></td>
+<td><code>INTEGER</code></td>
+<td>Foreign Key (<code>User.id</code>), Optional</td>
+<td>Owner of the category.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>VARCHAR(100)</code></td>
+<td>Not Null</td>
+<td>Category name.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>TEXT</code></td>
+<td>Optional</td>
+<td>Additional details about the category.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes_4">Notes<a class="headerlink" href="#notes_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>User-Specific Categories</strong>: If <code>user_id</code> is set, the category is user-specific; otherwise, it can be a global category.</li>
+<li><strong>Usage</strong>: Categories are linked to transactions and budgets for better organization.</li>
+</ul>
+<hr />
+<h2 id="summary-of-updates">Summary of Updates<a class="headerlink" href="#summary-of-updates" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Primary Keys Added</strong>: Introduced <code>id</code> fields as primary keys in tables where they were missing (<code>Transaction</code>, <code>Budget</code>, <code>Category</code>).</p>
+</li>
+<li>
+<p><strong>Foreign Key Constraints</strong>: Clearly defined relationships between tables using foreign keys to enforce referential integrity.</p>
+</li>
+<li>
+<p><strong>Unique Constraints</strong>:</p>
+<ul>
+<li>Enforced uniqueness on <code>User.email</code> to prevent duplicate user accounts.</li>
+<li>Added unique constraint on <code>Account.account_number</code> if applicable.</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Types and Fields</strong>:</p>
+<ul>
+<li>Replaced ambiguous field names with more descriptive ones (e.g., <code>TIME</code> to <code>created_at</code>).</li>
+<li>Clarified <code>AMOUNT</code> in <code>Transaction</code> to allow both positive and negative values.</li>
+<li>Added <code>description</code> fields for additional details where necessary.</li>
+</ul>
+</li>
+<li>
+<p><strong>Enumerations</strong>:</p>
+<ul>
+<li>Defined enums for <code>ACCOUNT_TYPE</code> and <code>FREQUENCY</code> to standardize allowed values.</li>
+<li>Recommended using PostgreSQL's <code>ENUM</code> type or lookup tables for better performance and data integrity.</li>
+</ul>
+</li>
+<li>
+<p><strong>Timestamps</strong>:</p>
+<ul>
+<li>Added <code>created_at</code> and <code>updated_at</code> fields to track record creation and modification times.</li>
+</ul>
+</li>
+<li>
+<p><strong>Password Security</strong>:</p>
+<ul>
+<li>Emphasized the importance of hashing passwords before storing them in the database.</li>
+</ul>
+</li>
+<li>
+<p><strong>Normalization</strong>:</p>
+<ul>
+<li>Introduced a <code>Category</code> table to eliminate redundancy and provide better data organization.</li>
+</ul>
+</li>
+<li>
+<p><strong>Additional Fields</strong>:</p>
+<ul>
+<li>Added optional fields like <code>first_name</code>, <code>last_name</code>, <code>currency</code>, <code>start_date</code>, and <code>end_date</code> for enhanced functionality.</li>
+</ul>
+</li>
+</ol>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../authentication/" class="btn btn-neutral float-left" title="Authentication"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../authentication/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
