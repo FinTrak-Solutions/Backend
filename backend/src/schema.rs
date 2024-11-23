@@ -5,5 +5,6 @@ diesel::table! {
         id -> Int4,
         email -> Text,
         password -> Text,
+        username -> Text,
     }
 }
