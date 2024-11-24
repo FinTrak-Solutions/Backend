@@ -1,42 +1,79 @@
-use crate::models::user::NewUser;
+use crate::models::user::{NewUser, User};
 use crate::schema::users::dsl::*;
 use diesel::prelude::*;
 #[allow(unused_imports)]
 use diesel::result::Error;
 use crate::db::DbPool;
+use rocket::http::Status;
 
-pub async fn handle_signup(user: crate::models::user::NewUser, pool: DbPool) -> &'static str {
-    // Add business logic here, e.g., validate input, hash password, and save to database
+pub async fn handle_signup(user: NewUser, pool: DbPool) -> (Status, &'static str) {
     if user.email.is_empty() || user.password.is_empty() || user.username.is_empty() {
-        return "Invalid input";
+        return (Status::BadRequest, "Invalid input");
     }
+
     println!("Signup request received for user: {}", user.username);
     println!("Signup request received for email: {}", user.email);
 
-    // create new user instance
-    let new_user = NewUser {
-        email: user.email.clone(),
-        password: user.password.clone(),
-        username: user.username.clone(),
-    };
+    // Check if the email is already registered
+    let email_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = user.email.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            users.filter(email.eq(email_to_check))
+                .first::<User>(&mut conn)
+                .optional()
+        }
+    })
+        .await;
+
+    match email_exists {
+        Ok(Ok(Some(_))) => {
+            println!("Email already registered");
+            return (Status::Conflict, "Email already registered");
+        }
+        Ok(Ok(None)) => {}
+        Ok(Err(e)) => {
+            eprintln!("Error checking email existence: {:?}", e);
+            return (Status::InternalServerError, "Database error");
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during email check: {:?}", e);
+            return (Status::InternalServerError, "Internal server error");
+        }
+    }
 
     // Insert the new user into the database
-    let result = tokio::task::spawn_blocking(move || {
-        let mut conn = pool.get().expect("Failed to get database connection");
-        diesel::insert_into(users)
-            .values(&new_user)
-            .execute(&mut conn)
+    let result = tokio::task::spawn_blocking({
+        let new_user = user;
+        let pool = pool.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            diesel::insert_into(users)
+                .values(&new_user)
+                .execute(&mut conn)
+        }
     })
         .await;
 
     match result {
-        Ok(Ok(_)) => "User successfully registered",
-        Ok(Err(e)) => {
-            eprintln!("Database error: {:?}", e);
-            "Failed to register user"
+        Ok(Ok(_)) => (Status::Ok, "User successfully registered"),
+        Ok(Err(diesel::result::Error::DatabaseError(
+                   diesel::result::DatabaseErrorKind::UniqueViolation,
+                   _,
+               ))) => {
+            eprintln!("Duplicate email insertion error.");
+            (Status::Conflict, "Email already registered")
         }
-        Err(_) => "Internal server error",
+        Ok(Err(e)) => {
+            eprintln!("Database error during insertion: {:?}", e);
+            (Status::InternalServerError, "Failed to register user")
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during insertion: {:?}", e);
+            (Status::InternalServerError, "Internal server error")
+        }
     }
-
-    // "User successfully registered"
 }
+
+
