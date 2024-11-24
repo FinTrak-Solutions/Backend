@@ -1,9 +1,21 @@
-#[allow(unused_imports)]
-use rocket::serde::{Deserialize, Serialize};
+use diesel::prelude::*;
+use crate::schema::users;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+// Struct for querying users
+#[derive(Debug, Queryable, Serialize, Deserialize)]
 pub struct User {
-    pub username: String,
+    pub id: i32,
     pub email: String,
     pub password: String,
+    pub username: String,
+}
+
+// Struct for inserting new users
+#[derive(Insertable, Serialize, Deserialize)]
+#[diesel(table_name = users)]
+pub struct NewUser {
+    pub email: String,
+    pub password: String,
+    pub username: String,
 }

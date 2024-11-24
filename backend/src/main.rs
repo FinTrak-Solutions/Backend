@@ -3,6 +3,12 @@
 mod routes;
 mod models;
 mod handlers;
+mod db;
+mod schema;
+
+// ROUTES
+use routes::auth::signup;
+
 
 #[get("/")]
 fn index() -> &'static str {
@@ -11,7 +17,10 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
+    let pool = db::establish_connection();
+
     rocket::build()
+        .manage(pool)
         .mount("/", routes![index])
-        .mount("/", routes![routes::auth::signup])
+        .mount("/", routes![signup])
 }
