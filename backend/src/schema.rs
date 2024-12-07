@@ -27,6 +27,7 @@ diesel::table! {
         category_id -> Int4,
         amount -> Float8,
         notes -> Nullable<Text>,
+        account_id -> Int4,
     }
 }
 
@@ -39,6 +40,7 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(transactions -> accounts (account_id));
 diesel::joinable!(transactions -> categories (category_id));
 
 diesel::allow_tables_to_appear_in_same_query!(

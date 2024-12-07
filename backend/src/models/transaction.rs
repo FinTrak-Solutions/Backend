@@ -11,6 +11,7 @@ pub struct Transaction {
     pub category_id : i32,
     pub amount: f64,
     pub notes: Option<String>,
+    pub account_id : i32,
 }
 
 // Struct for inserting new users
@@ -21,4 +22,5 @@ pub struct NewTransaction {
     pub category_id : i32,
     pub amount: f64,
     pub notes: Option<String>,
+    pub account_id : i32,
 }

@@ -15,7 +15,7 @@ pub struct Category {
 }
 
 // Struct for inserting new users
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, Clone)]
 #[diesel(table_name = categories)]
 pub struct NewCategory {
     pub email: String,
