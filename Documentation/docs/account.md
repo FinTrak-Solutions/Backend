@@ -9,13 +9,22 @@ http://127.0.0.1:8000/account_create
 {
     "email": "test@example.com",
     "type": "credit",
-    "account_name": "td_credit",
-    "init_balance(optional)": -200
+    "account_name": "td_credit"
 }
 ```
 - Response:
-    - Successfully created: `STATUS_CODE::CREATED` (201)
-    - Failed to create (e.g. account name already exists): `STATUS_CODE::BAD_REQUEST` (400)
+    - Successfully created: 
+        - `STATUS_CODE`: `CREATED (201)` 
+        - `Message`: "Successfully created `account_name`"
+    - Failed to create: 
+        - No `email` found in `user` table
+            - `STATUS_CODE`: `BAD_REQUEST (400)`
+            - `Message`: "No user found for the provided email"
+        - `account_name` already exists for current `user`
+            - `STATUS_CODE`: `BAD_REQUEST (400)` 
+            - `Message`: "Failed to create new account"
+        
+        
 
 ## Get Account Overview for User `GET`
 #### API

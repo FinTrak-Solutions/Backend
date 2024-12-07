@@ -6,8 +6,8 @@ mod handlers;
 mod db;
 mod schema;
 
-// ROUTES
 use routes::auth::signup;
+use routes::account::account_create;
 
 #[get("/livereload/<_..>")]
 fn livereload_catcher() -> &'static str {
@@ -27,5 +27,6 @@ fn rocket() -> _ {
         .manage(pool)
         .mount("/", routes![index])
         .mount("/", routes![signup])
+        .mount("/", routes![account_create])
         .mount("/", routes![livereload_catcher])
 }

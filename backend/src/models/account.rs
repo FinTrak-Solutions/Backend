@@ -13,10 +13,9 @@ pub struct Account {
 }
 
 // Struct for inserting new users
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, Clone)]
 #[diesel(table_name = accounts)]
 pub struct NewAccount {
-    pub account_id: i32,
     pub email: String,
     pub account_type: String,
     pub account_name: String,
