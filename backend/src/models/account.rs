@@ -9,6 +9,7 @@ pub struct Account {
     pub account_id: i32,
     pub email: String,
     pub account_type: String,
+    pub account_name: String,
 }
 
 // Struct for inserting new users
@@ -18,4 +19,5 @@ pub struct NewAccount {
     pub account_id: i32,
     pub email: String,
     pub account_type: String,
+    pub account_name: String,
 }

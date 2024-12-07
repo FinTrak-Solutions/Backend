@@ -5,6 +5,7 @@ diesel::table! {
         account_id -> Int4,
         email -> Text,
         account_type -> Text,
+        account_name -> Text,
     }
 }
 
