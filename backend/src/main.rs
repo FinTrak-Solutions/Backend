@@ -1,15 +1,16 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
-mod routes;
-mod models;
-mod handlers;
 mod db;
+mod handlers;
+mod models;
+mod routes;
 mod schema;
 
 // ROUTES
-use routes::auth::signup;
 use routes::account::{account_create, account_summary, delete_account};
-
+use routes::auth::signup;
+use routes::category::category_create;
 
 #[get("/livereload/<_..>")]
 fn livereload_catcher() -> &'static str {
@@ -33,4 +34,5 @@ fn rocket() -> _ {
         .mount("/", routes![account_summary])
         .mount("/", routes![delete_account])
         .mount("/", routes![livereload_catcher])
+        .mount("/", routes![category_create])
 }

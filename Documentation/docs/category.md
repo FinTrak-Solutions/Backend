@@ -15,6 +15,17 @@
     "budget_freq": "daily"
 }
 ```
+#### Response:
+- Successfully created: 
+    - `STATUS_CODE`: `CREATED (201)` 
+    - `Message`: "Successfully created `category_nickname`"
+- Failed to create: 
+    - No `email` found in `user` table
+        - `STATUS_CODE`: `BAD_REQUEST (400)`
+        - `Message`: "No user found for the provided email"
+    - `category_nickname` already exists for current `user`
+        - `STATUS_CODE`: `BAD_REQUEST (400)` 
+        - `Message`: Failed to create new category: duplicate nicknames
 
 ## Get Category Overview for User `GET`
 #### API
