@@ -33,15 +33,48 @@
 /category_summary?email=wick@example.com
 ```
 #### Response:
-TBD
+- Email found
+    - `STATUS_CODE`: `OK (200)`
+```Json
+[
+    {
+        "email": "wick@example.com",
+        "nickname": "TBD",
+        "category_type": "weapon",
+        "budget": 12345.678,
+        "budget_freq": "daily"
+    },
+    {
+        "email": "wick@example.com",
+        "nickname": "food",
+        "category_type": "expense",
+        "budget": 100.00,
+        "budget_freq": "daily"
+    }
+]
+```
+- Email Not found
+    - `STATUS_CODE`: `OK (200)`
+    - return empty list in body
+```json
+[]
+```
 
 ## Delete a category for User `DELETE`
 #### API
 ```
-/delete_category?email=<>&category_type=<>
+/delete_category?email=<user_email_addr>&category_nickname=<nickname>
 ```
 #### Response:
-TBD
+- Email not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Message`: "No user found for the provided email"
+- Account not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Message`: "No such category found for the provided email"
+- Account not found:
+    - `STATUS_CODE`: `OK (200)`
+    - `Message`: "Category successfully deleted"
 
 ## Update a category for User `UPDATE`
 #### API

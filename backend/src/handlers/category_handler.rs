@@ -5,15 +5,20 @@ use crate::schema::categories::dsl::*;
 use crate::schema::users::dsl::{email as user_email, users}; // For users table
 use diesel::prelude::*;
 use rocket::http::Status;
+use rocket::serde::json::Json;
 
 pub async fn handle_category_create(new_cat: NewCategory, pool: DbPool) -> (Status, String) {
     // Step 1: Validate input
-    if new_cat.email.is_empty() || new_cat.category_type.is_empty() || new_cat.nickname.is_empty() {
+    if new_cat.email.is_empty()
+        || new_cat.category_type.is_empty()
+        || new_cat.nickname.is_empty()
+        || new_cat.budget_freq.is_empty()
+    {
         return (Status::BadRequest, "Invalid input".to_string());
     }
 
     // Step 1.5: Check if the email exists in users table
-    // If not, no account should be created
+    // If not, no category should be created
     let user_exists = tokio::task::spawn_blocking({
         let pool = pool.clone();
         let email_to_check = new_cat.email.clone();
@@ -36,7 +41,7 @@ pub async fn handle_category_create(new_cat: NewCategory, pool: DbPool) -> (Stat
             );
         }
         Ok(Ok(Some(_user))) => {
-            // User found, proceed to account name existence check
+            // User found, proceed to category name existence check
         }
         Ok(Err(e)) => {
             eprintln!("Error checking user existence: {:?}", e);
@@ -92,7 +97,7 @@ pub async fn handle_category_create(new_cat: NewCategory, pool: DbPool) -> (Stat
 
             match result {
                 Ok(Ok(_)) => {
-                    // Successfully inserted the account
+                    // Successfully inserted the category
                     let msg = format!("Successfully created {}", nickname_for_message.nickname);
                     (Status::Created, msg)
                 }
@@ -110,15 +115,170 @@ pub async fn handle_category_create(new_cat: NewCategory, pool: DbPool) -> (Stat
             }
         }
         Ok(Err(e)) => {
-            eprintln!("Error checking account existence: {:?}", e);
+            eprintln!("Error checking category existence: {:?}", e);
             (Status::InternalServerError, "Database error".to_string())
         }
         Err(e) => {
-            eprintln!("Blocking task failed during account check: {:?}", e);
+            eprintln!("Blocking task failed during category check: {:?}", e);
             (
                 Status::InternalServerError,
                 "Internal server error".to_string(),
             )
+        }
+    }
+}
+
+// DELETE delete category
+pub async fn handle_delete_category(
+    email_str: String,
+    category_nickname: String,
+    pool: DbPool,
+) -> (Status, &'static str) {
+    // Check if email is empty or category_nickname is empty
+    if email_str.is_empty() || category_nickname.is_empty() {
+        return (Status::BadRequest, "Invalid input");
+    }
+
+    // Check if user exists
+    let user_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            users
+                .filter(user_email.eq(email_to_check))
+                .first::<User>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    match user_exists {
+        Ok(Ok(None)) => {
+            // No user found for this email
+            return (Status::BadRequest, "No user found for the provided email");
+        }
+        Ok(Ok(Some(_))) => {
+            // User found, proceed with category deletion
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking user existence: {:?}", e);
+            return (Status::InternalServerError, "Database error");
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during user check: {:?}", e);
+            return (Status::InternalServerError, "Internal server error");
+        }
+    }
+
+    // Check if the category nickname exists for this user
+    let category_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        let nickname_to_check = category_nickname.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            categories
+                .filter(email.eq(email_to_check))
+                .filter(nickname.eq(nickname_to_check))
+                .first::<Category>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    let found_category = match category_exists {
+        Ok(Ok(Some(cat))) => cat,
+        Ok(Ok(None)) => {
+            // category not found for this email
+            return (
+                Status::BadRequest,
+                "No such category found for the provided email",
+            );
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking category existence: {:?}", e);
+            return (Status::InternalServerError, "Database error");
+        }
+        Err(e) => {
+            eprintln!(
+                "Blocking task failed during category existence check: {:?}",
+                e
+            );
+            return (Status::InternalServerError, "Internal server error");
+        }
+    };
+
+    // Proceed to delete the found category
+    let deletion_result = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let to_delete_id = found_category.category_id;
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            diesel::delete(categories.filter(category_id.eq(to_delete_id))).execute(&mut conn)
+        }
+    })
+    .await;
+
+    match deletion_result {
+        Ok(Ok(rows_deleted)) => {
+            if rows_deleted > 0 {
+                (Status::Ok, "Category successfully deleted")
+            } else {
+                (Status::InternalServerError, "Failed to delete the category")
+            }
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error during deletion: {:?}", e);
+            (
+                Status::InternalServerError,
+                "Database error during deletion",
+            )
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during deletion: {:?}", e);
+            (Status::InternalServerError, "Internal server error")
+        }
+    }
+}
+
+// GET /category_summary?email=<>
+pub async fn handle_category_summary(
+    email_str: String,
+    pool: DbPool,
+) -> (Status, Json<Vec<Category>>) {
+    // If email is empty, return bad request
+    if email_str.is_empty() {
+        return (Status::BadRequest, Json(vec![]));
+    }
+
+    let categories_result = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_search = email_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            categories
+                .filter(email.eq(email_to_search))
+                .load::<Category>(&mut conn)
+        }
+    })
+    .await;
+
+    match categories_result {
+        Ok(Ok(cat_list)) => {
+            // Successfully retrieved categories
+            (Status::Ok, Json(cat_list))
+        }
+        Ok(Err(e)) => {
+            eprintln!("Database error during category summary retrieval: {:?}", e);
+            (Status::InternalServerError, Json(vec![]))
+        }
+        Err(e) => {
+            eprintln!(
+                "Blocking task failed during category summary retrieval: {:?}",
+                e
+            );
+            (Status::InternalServerError, Json(vec![]))
         }
     }
 }
