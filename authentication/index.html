@@ -52,6 +52,10 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#post-body-json">Post Body (Json)</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#request">Request:</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response-string-with-status-code">Response: (String with Status Code)</a>
+    </li>
         </ul>
     </li>
     </ul>
@@ -91,13 +95,11 @@
                 <h1 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h1>
 <h2 id="signup-post">Signup <code>POST</code><a class="headerlink" href="#signup-post" title="Permanent link">&para;</a></h2>
 <h4 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h4>
-<pre class="codehilite"><code>http://127.0.0.1:8000/signup
+<pre class="codehilite"><code>/signup
 </code></pre>
 
 <h4 id="post-body-json">Post Body (<em>Json</em>)<a class="headerlink" href="#post-body-json" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Request:</li>
-</ul>
+<h4 id="request">Request:<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
 <pre class="codehilite"><code class="language-Json">{
     &quot;username&quot;: &quot;John Wick&quot;,
     &quot;email&quot;: &quot;test@example.com&quot;,
@@ -105,8 +107,8 @@
 }
 </code></pre>
 
+<h4 id="response-string-with-status-code">Response: (String with Status Code)<a class="headerlink" href="#response-string-with-status-code" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Response: (String or Status Code?)<ul>
 <li>If email exists:<ul>
 <li>password good: <ul>
 <li><code>STATUS_CODE</code>: <code>OK (200)</code>  </li>
@@ -123,8 +125,6 @@
 <li>If email does not exist: <ul>
 <li><code>STATUS_CODE</code>: <code>CREATED (201)</code> </li>
 <li><code>Message</code>: "User successfully registered"</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
