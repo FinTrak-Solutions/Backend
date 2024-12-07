@@ -1,0 +1,21 @@
+use diesel::prelude::*;
+use crate::schema::accounts;
+use serde::{Deserialize, Serialize};
+
+// Struct for querying users
+// optional
+#[derive(Debug, Queryable, Serialize, Deserialize)]
+pub struct Account {
+    pub account_id: i32,
+    pub email: String,
+    pub account_type: String,
+}
+
+// Struct for inserting new users
+#[derive(Insertable, Serialize, Deserialize)]
+#[diesel(table_name = accounts)]
+pub struct NewAccount {
+    pub account_id: i32,
+    pub email: String,
+    pub account_type: String,
+}
