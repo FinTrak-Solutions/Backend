@@ -66,9 +66,17 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#get-account-detailed-view-for-user-get">Get Account Detailed View for User GET</a>
+    <li class="toctree-l2"><a class="reference internal" href="#delete-an-account-for-user-delete">Delete an account for User DELETE</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#api_2">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response_2">Response:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-account-detailed-view-for-user-get">Get Account Detailed View for User GET</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_3">API</a>
     </li>
         </ul>
     </li>
@@ -177,8 +185,31 @@
 <pre class="codehilite"><code class="language-json">[]
 </code></pre>
 
-<h2 id="get-account-detailed-view-for-user-get">Get Account Detailed View for User <code>GET</code><a class="headerlink" href="#get-account-detailed-view-for-user-get" title="Permanent link">&para;</a></h2>
+<h2 id="delete-an-account-for-user-delete">Delete an account for User <code>DELETE</code><a class="headerlink" href="#delete-an-account-for-user-delete" title="Permanent link">&para;</a></h2>
 <h4 id="api_2">API<a class="headerlink" href="#api_2" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/delete_account?email=&lt;&gt;&amp;account_name=&lt;&gt;
+</code></pre>
+
+<h4 id="response_2">Response:<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Email not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No user found for the provided email"</li>
+</ul>
+</li>
+<li>Account not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No such account found for the provided email"</li>
+</ul>
+</li>
+<li>Account not found:<ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code></li>
+<li><code>Message</code>: "Account successfully deleted"</li>
+</ul>
+</li>
+</ul>
+<h2 id="get-account-detailed-view-for-user-get">Get Account Detailed View for User <code>GET</code><a class="headerlink" href="#get-account-detailed-view-for-user-get" title="Permanent link">&para;</a></h2>
+<h4 id="api_3">API<a class="headerlink" href="#api_3" title="Permanent link">&para;</a></h4>
 <pre class="codehilite"><code>http://127.0.0.1:8000/account_details
 </code></pre>
 
