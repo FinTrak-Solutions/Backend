@@ -4,6 +4,8 @@ nav:
   - Home: index.md
   - Authentication: authentication.md
   - Account Management: account.md
+  - Category Management: category.md
+  - Transaction Management: transaction.md
   - Database Schema: database.md
 
 theme: readthedocs

@@ -76,8 +76,11 @@
 
 ## Get Account Detailed View for User `GET`
 #### API
+> **NOTE:** This interface will be implemented after finishing transaction section.
+
+
 ```
-http://127.0.0.1:8000/account_details
+/account_details
 ```
 - Request:
 ```Json
