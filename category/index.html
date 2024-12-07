@@ -53,6 +53,42 @@
               </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Category Management</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#create-new-category-post">Create New Category POST</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#request">Request</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-category-overview-for-user-get">Get Category Overview for User GET</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_1">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response">Response:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#delete-a-category-for-user-delete">Delete a category for User DELETE</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_2">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response_1">Response:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#update-a-category-for-user-update">Update a category for User UPDATE</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_3">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#request_1">Request</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response_2">Response:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -86,7 +122,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>TBD</p>
+                <h1 id="category-management">Category Management<a class="headerlink" href="#category-management" title="Permanent link">&para;</a></h1>
+<h2 id="create-new-category-post">Create New Category <code>POST</code><a class="headerlink" href="#create-new-category-post" title="Permanent link">&para;</a></h2>
+<h4 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/category_create
+</code></pre>
+
+<h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code class="language-json">{
+    &quot;email&quot;: &quot;wick@example.com&quot;,
+    &quot;nickname&quot;: &quot;TBD&quot;,
+    &quot;category_type&quot;: &quot;weapon&quot;,
+    &quot;budget&quot;: 12345.678,
+    &quot;budget_freq&quot;: &quot;daily&quot;
+}
+</code></pre>
+
+<h2 id="get-category-overview-for-user-get">Get Category Overview for User <code>GET</code><a class="headerlink" href="#get-category-overview-for-user-get" title="Permanent link">&para;</a></h2>
+<h4 id="api_1">API<a class="headerlink" href="#api_1" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/category_summary?email=wick@example.com
+</code></pre>
+
+<h4 id="response">Response:<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
+<p>TBD</p>
+<h2 id="delete-a-category-for-user-delete">Delete a category for User <code>DELETE</code><a class="headerlink" href="#delete-a-category-for-user-delete" title="Permanent link">&para;</a></h2>
+<h4 id="api_2">API<a class="headerlink" href="#api_2" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/delete_category?email=&lt;&gt;&amp;category_type=&lt;&gt;
+</code></pre>
+
+<h4 id="response_1">Response:<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
+<p>TBD</p>
+<h2 id="update-a-category-for-user-update">Update a category for User <code>UPDATE</code><a class="headerlink" href="#update-a-category-for-user-update" title="Permanent link">&para;</a></h2>
+<h4 id="api_3">API<a class="headerlink" href="#api_3" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/category_update
+</code></pre>
+
+<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code class="language-json">{
+    &quot;email&quot;: &quot;wick@example.com&quot;,
+    &quot;nickname&quot;: &quot;TBD&quot;,
+    &quot;category_type&quot;: &quot;weapon&quot;,
+    &quot;budget&quot;: 12345.678,
+    &quot;budget_freq&quot;: &quot;daily&quot;
+}
+</code></pre>
+
+<h4 id="response_2">Response:<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
+<p>TBD</p>
               
             </div>
           </div><footer>
