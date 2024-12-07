@@ -108,11 +108,23 @@
 <ul>
 <li>Response: (String or Status Code?)<ul>
 <li>If email exists:<ul>
-<li>password good: <code>STATUS_CODE::OK</code> (200)</li>
-<li>password bad: <code>STATUS_CODE::BAD_REQUEST</code> (400)</li>
+<li>password good: <ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code>  </li>
+<li><code>Message</code>: "<code>username</code> Login successful"</li>
 </ul>
 </li>
-<li>If email does not exist: <code>STATUS_CODE::CREATED</code> (201)</li>
+<li>password bad:<ul>
+<li><code>STATUS_CODE</code>:<code>BAD_REQUEST (400)</code> </li>
+<li><code>Message</code>: "Invalid password"</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>If email does not exist: <ul>
+<li><code>STATUS_CODE</code>: <code>CREATED (201)</code> </li>
+<li><code>Message</code>: "User successfully registered"</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

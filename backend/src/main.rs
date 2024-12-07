@@ -9,6 +9,10 @@ mod schema;
 // ROUTES
 use routes::auth::signup;
 
+#[get("/livereload/<_..>")]
+fn livereload_catcher() -> &'static str {
+    "LiveReload route placeholder"
+}
 
 #[get("/")]
 fn index() -> &'static str {
@@ -23,4 +27,5 @@ fn rocket() -> _ {
         .manage(pool)
         .mount("/", routes![index])
         .mount("/", routes![signup])
+        .mount("/", routes![livereload_catcher])
 }

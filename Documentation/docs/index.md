@@ -3,6 +3,17 @@
 ### [Authentication](authentication.md)
 ### [Account Management](account.md)
 
+| Category          | API                | Done or Not | Time Finished     | Link to Docs                                                            |
+|-------------------|--------------------|-------------|-------------------|-------------------------------------------------------------------------|
+| Authentication    | `/signup`          | ✅           | 2024-12-07 2:00pm | [View Docs](authentication/#signup-post)                                |
+| Account Management| `/account_create`  |             |                   | [View Docs](account/#create-new-account-for-user-post)                  |
+| Account Management| `/account_summary` |             |                   | [View Docs](account/#get-account-overview-for-user-get)      |
+| Account Management| `/account_detail`  |             |                   | [View Docs](account/#get-account-detailed-view-for-user-get) |
+
+
+
+
+
 ## Quick Start
 ### Update Documentation
 #### Clone project

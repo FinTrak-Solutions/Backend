@@ -12,7 +12,7 @@ pub struct User {
 }
 
 // Struct for inserting new users
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, Clone)]
 #[diesel(table_name = users)]
 pub struct NewUser {
     pub email: String,
