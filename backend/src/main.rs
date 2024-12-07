@@ -8,9 +8,8 @@ mod schema;
 
 // ROUTES
 use routes::auth::signup;
-use routes::account::{account_create, account_summary};
-#[allow(unused_imports)]
-use rocket::http::Status;
+use routes::account::{account_create, account_summary, delete_account};
+
 
 #[get("/livereload/<_..>")]
 fn livereload_catcher() -> &'static str {
@@ -31,6 +30,7 @@ fn rocket() -> _ {
         .mount("/", routes![index])
         .mount("/", routes![signup])
         .mount("/", routes![account_create])
-        .mount("/", routes![account_summary]) // Mount the new GET route
+        .mount("/", routes![account_summary])
+        .mount("/", routes![delete_account])
         .mount("/", routes![livereload_catcher])
 }

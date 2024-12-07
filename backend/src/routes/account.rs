@@ -25,3 +25,16 @@ pub struct AccountQuery {
 pub async fn account_summary(account_query: AccountQuery, pool: &State<DbPool>) -> (Status, Json<Vec<Account>>) {
     account_handler::handle_account_summary(account_query.email, pool.inner().clone()).await
 }
+
+// For /delete_account
+#[derive(FromForm)]
+pub struct DeleteAccountQuery {
+    pub email: String,
+    pub account_name: String,
+}
+
+// DELETE
+#[delete("/delete_account?<delete_query..>")]
+pub async fn delete_account(delete_query: DeleteAccountQuery, pool: &State<DbPool>) -> (Status, &'static str) {
+    account_handler::handle_delete_account(delete_query.email, delete_query.account_name, pool.inner().clone()).await
+}

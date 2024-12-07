@@ -57,6 +57,23 @@
 []
 ```
 
+## Delete an account for User `DELETE`
+#### API
+```
+/delete_account?email=<>&account_name=<>
+```
+#### Response:
+- Email not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Message`: "No user found for the provided email"
+- Account not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Message`: "No such account found for the provided email"
+- Account not found:
+    - `STATUS_CODE`: `OK (200)`
+    - `Message`: "Account successfully deleted"
+
+
 ## Get Account Detailed View for User `GET`
 #### API
 ```

@@ -1,5 +1,5 @@
 use crate::models::account::{NewAccount, Account};
-use crate::models::user::User; // Make sure to import User
+use crate::models::user::User;
 use crate::schema::accounts::dsl::*;
 use crate::schema::users::dsl::{users, email as user_email}; // For users table
 use diesel::prelude::*;
@@ -7,6 +7,106 @@ use crate::db::DbPool;
 use rocket::http::Status;
 use rocket::serde::json::Json;
 
+// DELETE delete account
+pub async fn handle_delete_account(email_str: String, account_name_str: String, pool: DbPool) -> (Status, &'static str) {
+    // Check if email is empty or account_name is empty
+    if email_str.is_empty() || account_name_str.is_empty() {
+        return (Status::BadRequest, "Invalid input");
+    }
+
+    // Check if user exists
+    let user_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            users
+                .filter(user_email.eq(email_to_check))
+                .first::<User>(&mut conn)
+                .optional()
+        }
+    }).await;
+
+    match user_exists {
+        Ok(Ok(None)) => {
+            // No user found for this email
+            return (Status::BadRequest, "No user found for the provided email");
+        }
+        Ok(Ok(Some(_))) => {
+            // User found, proceed with account deletion
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking user existence: {:?}", e);
+            return (Status::InternalServerError, "Database error");
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during user check: {:?}", e);
+            return (Status::InternalServerError, "Internal server error");
+        }
+    }
+
+    // Check if the account exists for this user
+    let account_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        let acc_name_to_check = account_name_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            accounts
+                .filter(email.eq(email_to_check))
+                .filter(account_name.eq(acc_name_to_check))
+                .first::<Account>(&mut conn)
+                .optional()
+        }
+    }).await;
+
+    let found_account = match account_exists {
+        Ok(Ok(Some(acc))) => acc,
+        Ok(Ok(None)) => {
+            // Account not found for this email
+            return (Status::BadRequest, "No such account found for the provided email");
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking account existence: {:?}", e);
+            return (Status::InternalServerError, "Database error");
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during account existence check: {:?}", e);
+            return (Status::InternalServerError, "Internal server error");
+        }
+    };
+
+    // Proceed to delete the found account
+    let deletion_result = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let acc_id_to_delete = found_account.account_id;
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            diesel::delete(accounts.filter(account_id.eq(acc_id_to_delete)))
+                .execute(&mut conn)
+        }
+    }).await;
+
+    match deletion_result {
+        Ok(Ok(rows_deleted)) => {
+            if rows_deleted > 0 {
+                (Status::Ok, "Account successfully deleted")
+            } else {
+                (Status::InternalServerError, "Failed to delete the account")
+            }
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error during deletion: {:?}", e);
+            (Status::InternalServerError, "Database error during deletion")
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during deletion: {:?}", e);
+            (Status::InternalServerError, "Internal server error")
+        }
+    }
+}
+
+// GET /account_summary?email=<>
 pub async fn handle_account_summary(email_str: String, pool: DbPool) -> (Status, Json<Vec<Account>>) {
     // If email is empty, return bad request
     if email_str.is_empty() {
