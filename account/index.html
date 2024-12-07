@@ -110,15 +110,30 @@
 <pre class="codehilite"><code class="language-Json">{
     &quot;email&quot;: &quot;test@example.com&quot;,
     &quot;type&quot;: &quot;credit&quot;,
-    &quot;account_name&quot;: &quot;td_credit&quot;,
-    &quot;init_balance(optional)&quot;: -200
+    &quot;account_name&quot;: &quot;td_credit&quot;
 }
 </code></pre>
 
 <ul>
 <li>Response:<ul>
-<li>Successfully created: <code>STATUS_CODE::CREATED</code> (201)</li>
-<li>Failed to create (e.g. account name already exists): <code>STATUS_CODE::BAD_REQUEST</code> (400)</li>
+<li>Successfully created: <ul>
+<li><code>STATUS_CODE</code>: <code>CREATED (201)</code> </li>
+<li><code>Message</code>: "Successfully created <code>account_name</code>"</li>
+</ul>
+</li>
+<li>Failed to create: <ul>
+<li>No <code>email</code> found in <code>user</code> table<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No user found for the provided email"</li>
+</ul>
+</li>
+<li><code>account_name</code> already exists for current <code>user</code><ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code> </li>
+<li><code>Message</code>: "Failed to create new account"</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
