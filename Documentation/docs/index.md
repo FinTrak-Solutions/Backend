@@ -1,6 +1,7 @@
 # Backend Documentation
 ## API
 ### [Authentication](authentication.md)
+### [Account Management](account.md)
 
 ## Quick Start
 ### Update Documentation
