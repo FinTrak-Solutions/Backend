@@ -5,6 +5,40 @@ use crate::schema::users::dsl::{users, email as user_email}; // For users table
 use diesel::prelude::*;
 use crate::db::DbPool;
 use rocket::http::Status;
+use rocket::serde::json::Json;
+
+pub async fn handle_account_summary(email_str: String, pool: DbPool) -> (Status, Json<Vec<Account>>) {
+    // If email is empty, return bad request
+    if email_str.is_empty() {
+        return (Status::BadRequest, Json(vec![]));
+    }
+
+    let accounts_result = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_search = email_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            accounts
+                .filter(email.eq(email_to_search))
+                .load::<Account>(&mut conn)
+        }
+    }).await;
+
+    match accounts_result {
+        Ok(Ok(acc_list)) => {
+            // Successfully retrieved accounts
+            (Status::Ok, Json(acc_list))
+        }
+        Ok(Err(e)) => {
+            eprintln!("Database error during account summary retrieval: {:?}", e);
+            (Status::InternalServerError, Json(vec![]))
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during account summary retrieval: {:?}", e);
+            (Status::InternalServerError, Json(vec![]))
+        }
+    }
+}
 
 pub async fn handle_account_create(new_acc: NewAccount, pool: DbPool) -> (Status, String) {
     // Step 1: Validate input
