@@ -9,6 +9,27 @@ diesel::table! {
 }
 
 diesel::table! {
+    categories (category_id) {
+        category_id -> Int4,
+        email -> Text,
+        nickname -> Text,
+        category_type -> Text,
+        budget -> Float8,
+        budget_freq -> Text,
+    }
+}
+
+diesel::table! {
+    transactions (trans_id) {
+        trans_id -> Int4,
+        email -> Text,
+        category_id -> Int4,
+        amount -> Float8,
+        notes -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Int4,
         email -> Text,
@@ -17,7 +38,11 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(transactions -> categories (category_id));
+
 diesel::allow_tables_to_appear_in_same_query!(
     accounts,
+    categories,
+    transactions,
     users,
 );
