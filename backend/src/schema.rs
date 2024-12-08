@@ -44,4 +44,9 @@ diesel::table! {
 diesel::joinable!(transactions -> accounts (account_id));
 diesel::joinable!(transactions -> categories (category_id));
 
-diesel::allow_tables_to_appear_in_same_query!(accounts, categories, transactions, users,);
+diesel::allow_tables_to_appear_in_same_query!(
+    accounts,
+    categories,
+    transactions,
+    users,
+);
