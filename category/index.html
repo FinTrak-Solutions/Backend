@@ -60,13 +60,15 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#request">Request</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response">Response:</a>
+    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#get-category-overview-for-user-get">Get Category Overview for User GET</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#api_1">API</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#response">Response:</a>
+    <li class="toctree-l3"><a class="reference internal" href="#response_1">Response:</a>
     </li>
         </ul>
     </li>
@@ -74,7 +76,7 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#api_2">API</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#response_1">Response:</a>
+    <li class="toctree-l3"><a class="reference internal" href="#response_2">Response:</a>
     </li>
         </ul>
     </li>
@@ -82,9 +84,7 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#api_3">API</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#request_1">Request</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#response_2">Response:</a>
+    <li class="toctree-l3"><a class="reference internal" href="#response_3">Response:</a>
     </li>
         </ul>
     </li>
@@ -138,37 +138,114 @@
 }
 </code></pre>
 
+<h4 id="response">Response:<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Successfully created: <ul>
+<li><code>STATUS_CODE</code>: <code>CREATED (201)</code> </li>
+<li><code>Message</code>: "Successfully created <code>category_nickname</code>"</li>
+</ul>
+</li>
+<li>Failed to create: <ul>
+<li>No <code>email</code> found in <code>user</code> table<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No user found for the provided email"</li>
+</ul>
+</li>
+<li><code>category_nickname</code> already exists for current <code>user</code><ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code> </li>
+<li><code>Message</code>: Failed to create new category: duplicate nicknames</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h2 id="get-category-overview-for-user-get">Get Category Overview for User <code>GET</code><a class="headerlink" href="#get-category-overview-for-user-get" title="Permanent link">&para;</a></h2>
 <h4 id="api_1">API<a class="headerlink" href="#api_1" title="Permanent link">&para;</a></h4>
 <pre class="codehilite"><code>/category_summary?email=wick@example.com
 </code></pre>
 
-<h4 id="response">Response:<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
-<p>TBD</p>
+<h4 id="response_1">Response:<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Email found: <code>STATUS_CODE</code>: <code>OK (200)</code></li>
+</ul>
+<pre class="codehilite"><code class="language-Json">[
+    {
+        &quot;email&quot;: &quot;wick@example.com&quot;,
+        &quot;nickname&quot;: &quot;TBD&quot;,
+        &quot;category_type&quot;: &quot;weapon&quot;,
+        &quot;budget&quot;: 12345.678,
+        &quot;budget_freq&quot;: &quot;daily&quot;
+    },
+    {
+        &quot;email&quot;: &quot;wick@example.com&quot;,
+        &quot;nickname&quot;: &quot;food&quot;,
+        &quot;category_type&quot;: &quot;expense&quot;,
+        &quot;budget&quot;: 100.00,
+        &quot;budget_freq&quot;: &quot;daily&quot;
+    }
+]
+</code></pre>
+
+<ul>
+<li>Email Not found<ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code></li>
+<li>return empty list in body</li>
+</ul>
+</li>
+</ul>
+<pre class="codehilite"><code class="language-json">[]
+</code></pre>
+
 <h2 id="delete-a-category-for-user-delete">Delete a category for User <code>DELETE</code><a class="headerlink" href="#delete-a-category-for-user-delete" title="Permanent link">&para;</a></h2>
 <h4 id="api_2">API<a class="headerlink" href="#api_2" title="Permanent link">&para;</a></h4>
-<pre class="codehilite"><code>/delete_category?email=&lt;&gt;&amp;category_type=&lt;&gt;
-</code></pre>
-
-<h4 id="response_1">Response:<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
-<p>TBD</p>
-<h2 id="update-a-category-for-user-update">Update a category for User <code>UPDATE</code><a class="headerlink" href="#update-a-category-for-user-update" title="Permanent link">&para;</a></h2>
-<h4 id="api_3">API<a class="headerlink" href="#api_3" title="Permanent link">&para;</a></h4>
-<pre class="codehilite"><code>/category_update
-</code></pre>
-
-<h4 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h4>
-<pre class="codehilite"><code class="language-json">{
-    &quot;email&quot;: &quot;wick@example.com&quot;,
-    &quot;nickname&quot;: &quot;TBD&quot;,
-    &quot;category_type&quot;: &quot;weapon&quot;,
-    &quot;budget&quot;: 12345.678,
-    &quot;budget_freq&quot;: &quot;daily&quot;
-}
+<pre class="codehilite"><code>/delete_category?email=&lt;user_email_addr&gt;&amp;category_nickname=&lt;nickname&gt;
 </code></pre>
 
 <h4 id="response_2">Response:<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
-<p>TBD</p>
+<ul>
+<li>Email not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No user found for the provided email"</li>
+</ul>
+</li>
+<li>Account not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No such category found for the provided email"</li>
+</ul>
+</li>
+<li>Account not found:<ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code></li>
+<li><code>Message</code>: "Category successfully deleted"</li>
+</ul>
+</li>
+</ul>
+<h2 id="update-a-category-for-user-update">Update a category for User <code>UPDATE</code><a class="headerlink" href="#update-a-category-for-user-update" title="Permanent link">&para;</a></h2>
+<h4 id="api_3">API<a class="headerlink" href="#api_3" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/category_update?email=&lt;user_email&gt;&amp;field=&lt;field_to_update&gt;&amp;category_nickname=&lt;nickname&gt;&amp;new_value=&lt;new_value&gt;
+</code></pre>
+
+<ul>
+<li>note: the <code>category_nickname</code> is the OLD name of the category.</li>
+</ul>
+<h4 id="response_3">Response:<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Email not found: <ul>
+<li><code>STATUS_CODE</code>: <code>BAD REQUEST (400)</code></li>
+<li>Message: "No user found for the provided email"</li>
+</ul>
+</li>
+<li>No match to update:  <ul>
+<li><code>STATUS_CODE</code>: <code>BAD REQUEST (400)</code></li>
+<li>Message: "Failed to update category: unable to match existing entry"</li>
+</ul>
+</li>
+<li>Invalid field specified:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD REQUEST (400)</code></li>
+<li>Message: "Invalid field specified."</li>
+</ul>
+</li>
+<li>Successfully updated:  <code>STATUS_CODE</code>: <code>OK (200)</code></li>
+</ul>
               
             </div>
           </div><footer>
