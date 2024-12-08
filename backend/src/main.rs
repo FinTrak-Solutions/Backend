@@ -10,7 +10,7 @@ mod schema;
 // ROUTES
 use routes::account::{account_create, account_summary, delete_account};
 use routes::auth::signup;
-use routes::category::{category_create, category_summary, delete_category};
+use routes::category::{category_create, category_summary, category_update, delete_category};
 
 #[get("/livereload/<_..>")]
 fn livereload_catcher() -> &'static str {
@@ -37,4 +37,5 @@ fn rocket() -> _ {
         .mount("/", routes![category_create])
         .mount("/", routes![delete_category])
         .mount("/", routes![category_summary])
+        .mount("/", routes![category_update])
 }

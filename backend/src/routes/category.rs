@@ -48,3 +48,28 @@ pub async fn category_summary(
 ) -> (Status, Json<Vec<Category>>) {
     category_handler::handle_category_summary(category_query.email, pool.inner().clone()).await
 }
+
+// A struct to parse the query parameter
+#[derive(FromForm)]
+pub struct CategoryUpdateQuery {
+    pub email: String,
+    pub field: String,
+    pub category_nickname: String,
+    pub new_value: String,
+}
+
+// POST route that uses a query parameter
+#[post("/category_update?<update_query..>")]
+pub async fn category_update(
+    update_query: CategoryUpdateQuery,
+    pool: &State<DbPool>,
+) -> (Status, String) {
+    category_handler::handle_category_update(
+        update_query.email,
+        update_query.field,
+        update_query.category_nickname,
+        update_query.new_value,
+        pool.inner().clone(),
+    )
+    .await
+}

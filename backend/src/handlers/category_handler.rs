@@ -282,3 +282,286 @@ pub async fn handle_category_summary(
         }
     }
 }
+
+// POST /category_update?email=<user_email>&field=<field_to_update>&category_nickname=<nickname>&new_value=<new_value>
+use std::str::FromStr;
+#[derive(Debug, PartialEq)]
+enum ValidCategoryFields {
+    Name,
+    Type,
+    Budget,
+    Freq,
+}
+
+impl FromStr for ValidCategoryFields {
+    type Err = ();
+    fn from_str(input: &str) -> Result<ValidCategoryFields, Self::Err> {
+        match input {
+            "nickname" => Ok(ValidCategoryFields::Name),
+            "category_type" => Ok(ValidCategoryFields::Type),
+            "budget" => Ok(ValidCategoryFields::Budget),
+            "budget_freq" => Ok(ValidCategoryFields::Freq),
+            _ => Err(()),
+        }
+    }
+}
+
+pub async fn handle_category_update(
+    email_str: String,
+    field: String,
+    category_nickname: String,
+    new_value: String,
+    pool: DbPool,
+) -> (Status, String) {
+    // Step 1: Check if the old entry exists in category table
+    // Step 1.1: Check if a valid field is specified
+    let field_str = field.as_str();
+    let field_type = match ValidCategoryFields::from_str(field_str) {
+        Ok(field_type) => field_type,
+        Err(_) => return (Status::BadRequest, "Invalid field specified.".to_string()),
+    };
+
+    // Step 1.2: Check if user exists
+    let user_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            users
+                .filter(user_email.eq(email_to_check))
+                .first::<User>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    match user_exists {
+        Ok(Ok(None)) => {
+            // No user found for this email
+            return (
+                Status::BadRequest,
+                "No user found for the provided email".to_string(),
+            );
+        }
+        Ok(Ok(Some(_user))) => {
+            // User found, proceed to category name existence check
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking user existence: {:?}", e);
+            return (Status::InternalServerError, "Database error".to_string());
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during user check: {:?}", e);
+            return (
+                Status::InternalServerError,
+                "Internal server error".to_string(),
+            );
+        }
+    }
+
+    // Step 1.3: Check if the category_nickname with old value entry exists in category table
+    let nickname_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        let name_to_check = category_nickname.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            categories
+                .filter(email.eq(email_to_check))
+                .filter(nickname.eq(name_to_check))
+                .first::<Category>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    match nickname_exists {
+        Ok(Ok(None)) => {
+            // Category nickname does not exist, cannot update
+            return (
+                Status::BadRequest,
+                "Failed to update category: unable to match existing entry".to_string(),
+            );
+        }
+        Ok(Ok(Some(_))) => {
+            // Step 2: Proceed to update the matching category
+            let cat_to_change = category_nickname.clone();
+            let email_to_change = email_str.clone();
+            let value_to_change = new_value.clone();
+
+            match field_type {
+                ValidCategoryFields::Name => {
+                    let result = tokio::task::spawn_blocking({
+                        let pool = pool.clone();
+                        move || {
+                            let mut conn = pool.get().expect("Failed to get database connection");
+                            diesel::update(
+                                categories
+                                    .filter(nickname.eq(cat_to_change))
+                                    .filter(email.eq(email_to_change)),
+                            )
+                            .set(nickname.eq(value_to_change))
+                            .execute(&mut conn)
+                        }
+                    })
+                    .await;
+
+                    match result {
+                        Ok(Ok(_)) => {
+                            // Successfully updated the category field
+                            let msg = format!(
+                                "Successfully updated category {} field {} to {}",
+                                category_nickname,
+                                field,
+                                new_value.clone()
+                            );
+                            (Status::Created, msg)
+                        }
+                        Ok(Err(e)) => {
+                            eprintln!("Database error during insertion: {:?}", e);
+                            (Status::InternalServerError, "Database error".to_string())
+                        }
+                        Err(e) => {
+                            eprintln!("Blocking task failed during insertion: {:?}", e);
+                            (
+                                Status::InternalServerError,
+                                "Internal server error".to_string(),
+                            )
+                        }
+                    }
+                }
+                ValidCategoryFields::Type => {
+                    let result = tokio::task::spawn_blocking({
+                        let pool = pool.clone();
+                        move || {
+                            let mut conn = pool.get().expect("Failed to get database connection");
+                            diesel::update(
+                                categories
+                                    .filter(nickname.eq(cat_to_change))
+                                    .filter(email.eq(email_to_change)),
+                            )
+                            .set(category_type.eq(value_to_change))
+                            .execute(&mut conn)
+                        }
+                    })
+                    .await;
+
+                    match result {
+                        Ok(Ok(_)) => {
+                            // Successfully updated the category field
+                            let msg = format!(
+                                "Successfully updated category {} field {} to {}",
+                                category_nickname,
+                                field,
+                                new_value.clone()
+                            );
+                            (Status::Created, msg)
+                        }
+                        Ok(Err(e)) => {
+                            eprintln!("Database error during insertion: {:?}", e);
+                            (Status::InternalServerError, "Database error".to_string())
+                        }
+                        Err(e) => {
+                            eprintln!("Blocking task failed during insertion: {:?}", e);
+                            (
+                                Status::InternalServerError,
+                                "Internal server error".to_string(),
+                            )
+                        }
+                    }
+                }
+                ValidCategoryFields::Budget => {
+                    let float_budget: f64 = value_to_change.parse().unwrap();
+                    let result = tokio::task::spawn_blocking({
+                        let pool = pool.clone();
+                        move || {
+                            let mut conn = pool.get().expect("Failed to get database connection");
+                            diesel::update(
+                                categories
+                                    .filter(nickname.eq(cat_to_change))
+                                    .filter(email.eq(email_to_change)),
+                            )
+                            .set(budget.eq(float_budget))
+                            .execute(&mut conn)
+                        }
+                    })
+                    .await;
+
+                    match result {
+                        Ok(Ok(_)) => {
+                            // Successfully updated the category field
+                            let msg = format!(
+                                "Successfully updated category {} field {} to {}",
+                                category_nickname,
+                                field,
+                                new_value.clone()
+                            );
+                            (Status::Created, msg)
+                        }
+                        Ok(Err(e)) => {
+                            eprintln!("Database error during insertion: {:?}", e);
+                            (Status::InternalServerError, "Database error".to_string())
+                        }
+                        Err(e) => {
+                            eprintln!("Blocking task failed during insertion: {:?}", e);
+                            (
+                                Status::InternalServerError,
+                                "Internal server error".to_string(),
+                            )
+                        }
+                    }
+                }
+                ValidCategoryFields::Freq => {
+                    let result = tokio::task::spawn_blocking({
+                        let pool = pool.clone();
+                        move || {
+                            let mut conn = pool.get().expect("Failed to get database connection");
+                            diesel::update(
+                                categories
+                                    .filter(nickname.eq(cat_to_change))
+                                    .filter(email.eq(email_to_change)),
+                            )
+                            .set(budget_freq.eq(value_to_change))
+                            .execute(&mut conn)
+                        }
+                    })
+                    .await;
+                    match result {
+                        Ok(Ok(_)) => {
+                            // Successfully updated the category field
+                            let msg = format!(
+                                "Successfully updated category {} field {} to {}",
+                                category_nickname,
+                                field,
+                                new_value.clone()
+                            );
+                            (Status::Created, msg)
+                        }
+                        Ok(Err(e)) => {
+                            eprintln!("Database error during insertion: {:?}", e);
+                            (Status::InternalServerError, "Database error".to_string())
+                        }
+                        Err(e) => {
+                            eprintln!("Blocking task failed during insertion: {:?}", e);
+                            (
+                                Status::InternalServerError,
+                                "Internal server error".to_string(),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking category existence: {:?}", e);
+            (Status::InternalServerError, "Database error".to_string())
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during category check: {:?}", e);
+            (
+                Status::InternalServerError,
+                "Internal server error".to_string(),
+            )
+        }
+    }
+}

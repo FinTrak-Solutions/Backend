@@ -33,8 +33,7 @@
 /category_summary?email=wick@example.com
 ```
 #### Response:
-- Email found
-    - `STATUS_CODE`: `OK (200)`
+- Email found: `STATUS_CODE`: `OK (200)`
 ```Json
 [
     {
@@ -79,17 +78,17 @@
 ## Update a category for User `UPDATE`
 #### API
 ```
-/category_update
+/category_update?email=<user_email>&field=<field_to_update>&category_nickname=<nickname>&new_value=<new_value>
 ```
-#### Request
-```json
-{
-    "email": "wick@example.com",
-    "nickname": "TBD",
-    "category_type": "weapon",
-    "budget": 12345.678,
-    "budget_freq": "daily"
-}
-```
+- note: the `category_nickname` is the OLD name of the category.
 #### Response:
-TBD
+- Email not found: 
+    - `STATUS_CODE`: `BAD REQUEST (400)`
+    - Message: "No user found for the provided email"
+- No match to update:  
+    - `STATUS_CODE`: `BAD REQUEST (400)`
+    - Message: "Failed to update category: unable to match existing entry"
+- Invalid field specified:
+    - `STATUS_CODE`: `BAD REQUEST (400)`
+    - Message: "Invalid field specified."
+- Successfully updated:  `STATUS_CODE`: `OK (200)`
