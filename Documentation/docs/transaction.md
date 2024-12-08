@@ -27,4 +27,4 @@
     - `Message`: "No account found for the provided email"
 - Successfully added:
     - `STATUS_CODE`: `CREATED (200)`
-    - `Message`: "Successfully added transaction"
+    - `Message`: new transaction ID as string.

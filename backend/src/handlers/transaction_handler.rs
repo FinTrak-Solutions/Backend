@@ -151,15 +151,16 @@ pub async fn handle_add_transaction(
             let mut conn = pool.get().expect("Failed to get database connection");
             diesel::insert_into(transactions)
                 .values(&db_new_trans) // Use one copy of the NewTransaction
+                .returning(trans_id)
                 .execute(&mut conn)
         }
     })
     .await;
 
     match result {
-        Ok(Ok(_)) => {
+        Ok(Ok(new_trans_id)) => {
             // Successfully inserted the category
-            let msg = "Successfully added transaction".to_string();
+            let msg = new_trans_id.to_string();
             (Status::Created, msg)
         }
         Ok(Err(e)) => {
