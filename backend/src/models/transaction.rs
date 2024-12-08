@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 // Struct for querying transactions
 // optional
-#[derive(Debug, Queryable, Serialize, Deserialize)]
+#[derive(Debug, Queryable, Serialize, Deserialize, QueryableByName)]
 pub struct Transaction {
     pub trans_id: i32,
     pub email: String,
@@ -16,7 +16,7 @@ pub struct Transaction {
 }
 
 // Struct for inserting new transactions
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, Queryable, QueryableByName)]
 #[diesel(table_name = transactions)]
 pub struct NewTransaction {
     pub email: String,

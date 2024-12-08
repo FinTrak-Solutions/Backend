@@ -1,7 +1,7 @@
 use crate::db::DbPool;
 use crate::models::account::Account;
 use crate::models::category::Category;
-use crate::models::transaction::{ClientTransaction, NewTransaction};
+use crate::models::transaction::{ClientTransaction, NewTransaction, Transaction};
 use crate::models::user::User;
 use crate::schema::accounts::dsl::*;
 use crate::schema::categories::dsl::*;
@@ -11,6 +11,7 @@ use chrono::prelude::*;
 use diesel::prelude::*;
 use rocket::http::Status;
 
+// POST add transaction
 pub async fn handle_add_transaction(
     new_trans: ClientTransaction,
     pool: DbPool,
@@ -149,30 +150,96 @@ pub async fn handle_add_transaction(
         let pool = pool.clone();
         move || {
             let mut conn = pool.get().expect("Failed to get database connection");
-            diesel::insert_into(transactions)
-                .values(&db_new_trans) // Use one copy of the NewTransaction
-                .returning(trans_id)
-                .execute(&mut conn)
+            let inserted_row: Result<Vec<i32>, diesel::result::Error> =
+                diesel::insert_into(transactions)
+                    .values(&db_new_trans) // Use one copy of the NewTransaction
+                    .returning(trans_id)
+                    .get_results(&mut conn);
+            match inserted_row {
+                Ok(row_ids) => return (Status::Created, row_ids[0].to_string()),
+                Err(_) => return (Status::InternalServerError, "Database error".to_string()),
+            }
         }
     })
     .await;
 
     match result {
-        Ok(Ok(new_trans_id)) => {
-            // Successfully inserted the category
-            let msg = new_trans_id.to_string();
-            (Status::Created, msg)
+        Err(_) => return (Status::InternalServerError, "Database error".to_string()),
+        Ok(db_res) => return db_res,
+    }
+}
+
+// DELETE delete transaction
+pub async fn handle_delete_transaction(tx_id: String, pool: DbPool) -> (Status, &'static str) {
+    // Check if email is empty or account_name is empty
+    if tx_id.is_empty() {
+        return (Status::BadRequest, "Invalid input");
+    }
+
+    let tx_id_int: i32 = tx_id.parse::<i32>().unwrap();
+    // Check if transaction ID exists
+    let tx_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            transactions
+                .filter(trans_id.eq(tx_id_int))
+                .first::<Transaction>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    match tx_exists {
+        Ok(Ok(None)) => {
+            // No transaction found for this ID
+            return (
+                Status::BadRequest,
+                "No transaction found for the provided ID",
+            );
+        }
+        Ok(Ok(Some(_))) => {
+            // Transaction found, proceed with transaction deletion
+            let deletion_result = tokio::task::spawn_blocking({
+                let pool = pool.clone();
+                move || {
+                    let mut conn = pool.get().expect("Failed to get database connection");
+                    diesel::delete(transactions.filter(trans_id.eq(tx_id_int))).execute(&mut conn)
+                }
+            })
+            .await;
+
+            match deletion_result {
+                Ok(Ok(rows_deleted)) => {
+                    if rows_deleted > 0 {
+                        (Status::Ok, "Transaction successfully deleted")
+                    } else {
+                        (
+                            Status::InternalServerError,
+                            "Failed to delete the transaction",
+                        )
+                    }
+                }
+                Ok(Err(e)) => {
+                    eprintln!("Error during deletion: {:?}", e);
+                    (
+                        Status::InternalServerError,
+                        "Database error during deletion",
+                    )
+                }
+                Err(e) => {
+                    eprintln!("Blocking task failed during deletion: {:?}", e);
+                    (Status::InternalServerError, "Internal server error")
+                }
+            }
         }
         Ok(Err(e)) => {
-            eprintln!("Database error during insertion: {:?}", e);
-            (Status::InternalServerError, "Database error".to_string())
+            eprintln!("Error checking user existence: {:?}", e);
+            return (Status::InternalServerError, "Database error");
         }
         Err(e) => {
-            eprintln!("Blocking task failed during insertion: {:?}", e);
-            (
-                Status::InternalServerError,
-                "Internal server error".to_string(),
-            )
+            eprintln!("Blocking task failed during user check: {:?}", e);
+            return (Status::InternalServerError, "Internal server error");
         }
     }
 }

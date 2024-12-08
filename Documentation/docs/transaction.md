@@ -28,3 +28,19 @@
 - Successfully added:
     - `STATUS_CODE`: `CREATED (200)`
     - `Message`: new transaction ID as string.
+
+## Delete Transaction `DELETE`
+#### API
+```
+/delete_trans?trans_id=<>
+```
+#### Response:
+- ID not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Message`: "No transaction found for the provided ID"
+- Transaction successfully deleted:
+    - `STATUS_CODE`: `OK (200)`
+    - `Message`: "No transaction found for the provided ID"
+- Otherwise:
+    - `STATUS_CODE`: `INTERNAL_SERVER_ERROR (500)`
+    - `Message`: "Failed to delete the transaction"

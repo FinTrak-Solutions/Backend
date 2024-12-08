@@ -16,3 +16,19 @@ pub async fn add_trans(
 ) -> (Status, String) {
     transaction_handler::handle_add_transaction(new_trans.into_inner(), pool.inner().clone()).await
 }
+
+// For /delete_trans
+#[derive(FromForm)]
+pub struct DeleteTransQuery {
+    pub trans_id: String,
+}
+
+// DELETE
+#[delete("/delete_trans?<delete_query..>")]
+pub async fn delete_trans(
+    delete_query: DeleteTransQuery,
+    pool: &State<DbPool>,
+) -> (Status, &'static str) {
+    transaction_handler::handle_delete_transaction(delete_query.trans_id, pool.inner().clone())
+        .await
+}
