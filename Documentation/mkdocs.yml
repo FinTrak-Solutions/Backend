@@ -1,7 +1,8 @@
-site_name: Backend Documentation
+site_name: FinTrack Documentation
 
 nav:
-  - Home: index.md
+  - Backend Documentation: index.md
+  - TUI Frontend Documentation: frontend.md
   - Authentication: authentication.md
   - Account Management: account.md
   - Category Management: category.md
