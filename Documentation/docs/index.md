@@ -14,7 +14,13 @@
 | `/account_detail`                          |         | TBD               | [View Docs](account/#get-account-detailed-view-for-user-get) |
 
 ### [Category Management](category.md)
-TBD
+| API                                        | Done | Time Finished | Link to Docs      |
+|--------------------------------------------|------|---------------|-------------------|
+| `/category_create`                          | ✅    | 2024-12-07    | [View Docs](category/#create-new-category-post) |
+| `/category_summary?email=<>`                | ✅    | 2024-12-07    | [View Docs](category/#get-category-overview-for-user-get) |
+| `/delete_category?email=<>&category_nickname=<>` | ✅    | 2024-12-07    | [View Docs](category/#delete-a-category-for-user-delete) |
+| `/category_update?email=<>&field=<field_to_update>&category_nickname=<>&new_value=<>`| ✅    | 2024-12-07    | [View Docs](category/#update-a-category-for-user-update) |
+
 
 ### [Transaction Management](transaction.md)
 TBD
