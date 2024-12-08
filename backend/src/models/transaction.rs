@@ -1,5 +1,5 @@
-use diesel::prelude::*;
 use crate::schema::transactions;
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 // Struct for querying users
@@ -8,10 +8,11 @@ use serde::{Deserialize, Serialize};
 pub struct Transaction {
     pub trans_id: i32,
     pub email: String,
-    pub category_id : i32,
+    pub category_id: i32,
     pub amount: f64,
     pub notes: Option<String>,
-    pub account_id : i32,
+    pub account_id: i32,
+    pub transaction_date: String,
 }
 
 // Struct for inserting new users
@@ -19,8 +20,9 @@ pub struct Transaction {
 #[diesel(table_name = transactions)]
 pub struct NewTransaction {
     pub email: String,
-    pub category_id : i32,
+    pub category_id: i32,
     pub amount: f64,
     pub notes: Option<String>,
-    pub account_id : i32,
+    pub account_id: i32,
+    pub transaction_date: String,
 }
