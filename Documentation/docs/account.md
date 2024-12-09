@@ -69,7 +69,7 @@
 - Account not found:
     - `STATUS_CODE`: `BAD_REQUEST (400)`
     - `Message`: "No such account found for the provided email"
-- Account not found:
+- Account found:
     - `STATUS_CODE`: `OK (200)`
     - `Message`: "Account successfully deleted"
 

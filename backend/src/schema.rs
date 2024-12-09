@@ -28,6 +28,7 @@ diesel::table! {
         amount -> Float8,
         notes -> Nullable<Text>,
         account_id -> Int4,
+        transaction_date -> Text,
     }
 }
 
