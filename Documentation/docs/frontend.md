@@ -35,6 +35,11 @@ TUI/
 
 ---
 
+## **🎨 Page Design**
+![page](static/FinTrack.jpg)
+
+---
+
 ## **📚 Explanation of Key Files**
 
 | **File/Folder**         | **Purpose**                               |
