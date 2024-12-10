@@ -33,6 +33,25 @@ TUI/
 └── .gitignore               # Ignore build files, node_modules, etc.
 ```
 
+
+## **🗂️ Work Distribution**
+
+| **Page**           | **Assign to** | **Done or Not** |
+|-------------------|---------------|-----------------|
+| Cover             | Damian        | ✅               |
+| Signup            | Damian        |                 |
+| Login             | Damian        |                 |
+| Home              | Damian        |                 |
+| Account           |               |                 |
+| Account Detail    |               |                 |
+| Create Account    |               |                 |
+| Category          |               |                 |
+| Category Detail   |               |                 |
+| Create Category   |               |                 |
+| Create Transaction|               |                 |
+| Report            | Damian        |                 |
+
+
 ---
 
 ## **🎨 Page Design**
