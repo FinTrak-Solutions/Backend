@@ -68,6 +68,16 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#request">Request</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response">Response:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#delete-transaction-delete">Delete Transaction DELETE</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_1">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response_1">Response:</a>
+    </li>
         </ul>
     </li>
     </ul>
@@ -103,18 +113,65 @@
                 <h1 id="transaction-management">Transaction Management<a class="headerlink" href="#transaction-management" title="Permanent link">&para;</a></h1>
 <h2 id="create-new-transaction-post">Create New Transaction <code>POST</code><a class="headerlink" href="#create-new-transaction-post" title="Permanent link">&para;</a></h2>
 <h4 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h4>
-<pre class="codehilite"><code>/transaction_create
+<pre class="codehilite"><code>/add_trans
 </code></pre>
 
 <h4 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h4>
 <pre class="codehilite"><code class="language-json">{
     &quot;email&quot;: &quot;wick@example.com&quot;,
-    &quot;category_type&quot;: &quot;weapon&quot;,
-    &quot;account_name&quot;: &quot;td_credit&quot;,
-    &quot;amount&quot;: 987.654,
-    &quot;notes&quot;: &quot;hello world&quot;
+    &quot;category_name&quot;: &quot;food&quot;,
+    &quot;amount&quot;: 456.78,
+    &quot;notes&quot;: &quot;winterlicious&quot;,
+    &quot;account_name&quot;: &quot;td_debit&quot;
 }
 </code></pre>
+
+<h4 id="response">Response:<a class="headerlink" href="#response" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Email not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No user found for the provided email"</li>
+</ul>
+</li>
+<li>Account not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No category found for the provided email"</li>
+</ul>
+</li>
+<li>Category not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No account found for the provided email"</li>
+</ul>
+</li>
+<li>Successfully added:<ul>
+<li><code>STATUS_CODE</code>: <code>CREATED (200)</code></li>
+<li><code>Message</code>: new transaction ID as string.</li>
+</ul>
+</li>
+</ul>
+<h2 id="delete-transaction-delete">Delete Transaction <code>DELETE</code><a class="headerlink" href="#delete-transaction-delete" title="Permanent link">&para;</a></h2>
+<h4 id="api_1">API<a class="headerlink" href="#api_1" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/delete_trans?trans_id=&lt;&gt;
+</code></pre>
+
+<h4 id="response_1">Response:<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>ID not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Message</code>: "No transaction found for the provided ID"</li>
+</ul>
+</li>
+<li>Transaction successfully deleted:<ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code></li>
+<li><code>Message</code>: "No transaction found for the provided ID"</li>
+</ul>
+</li>
+<li>Otherwise:<ul>
+<li><code>STATUS_CODE</code>: <code>INTERNAL_SERVER_ERROR (500)</code></li>
+<li><code>Message</code>: "Failed to delete the transaction"</li>
+</ul>
+</li>
+</ul>
               
             </div>
           </div><footer>
