@@ -76,27 +76,4 @@
 
 ## Get Account Detailed View for User `GET`
 #### API
-> **NOTE:** This interface will be implemented after finishing transaction section.
-
-
-```
-/account_details
-```
-- Request:
-```Json
-{
-    "email": "test@example.com",
-    "account_name": "td_credit"
-}
-```
-- Response:
-```Json
-[
-    {
-        "1": "TBD"
-    },
-    {
-        "2": "TBD"
-    }
-]
-```
+> **NOTE:** This interface will be handled by transaction details section.

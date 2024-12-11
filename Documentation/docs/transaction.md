@@ -44,3 +44,29 @@
 - Otherwise:
     - `STATUS_CODE`: `INTERNAL_SERVER_ERROR (500)`
     - `Message`: "Failed to delete the transaction"
+
+## Get Category Transactions `GET`
+#### API
+```
+/category_trans?category_name=<>&email=<>
+```
+#### Response:
+- email or category name not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Json<Vec<Transaction>>`: Empty
+- transactions successfully extracted:
+    - `STATUS_CODE`: `OK (200)`
+    - `Json<Vec<Transaction>>`
+
+## Get Account Transactions `GET`
+#### API
+```
+/account_trans?account_name=<>&email=<>
+```
+#### Response:
+- account name or email not found:
+    - `STATUS_CODE`: `BAD_REQUEST (400)`
+    - `Json<Vec<Transaction>>`: Empty
+- transactions successfully extracted:
+    - `STATUS_CODE`: `OK (200)`
+    - `Json<Vec<Transaction>>`
