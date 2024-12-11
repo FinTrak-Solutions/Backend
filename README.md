@@ -42,7 +42,10 @@
 ### 💸 **Transaction Management**
 | **API**                                    | **Status**    | **Time Finished**  | **Link to Docs**                          |
 |--------------------------------------------|---------------|---------------------|------------------------------------------|
-| TBD                                       | 🚧 In Progress | TBD                 | N/A                                      |
+| `/add_trans` | ✅ Complete | 2024-12-07 [View Docs](https://github.com/FinTrak-Solutions/Backend/blob/main/Documentation/docs/transaction.md#create-new-transaction-post) |
+| `/delete_trans?trans_id=<>` | ✅ Complete | 2024-12- 07 [View Docs](https://github.com/FinTrak-Solutions/Backend/blob/main/Documentation/docs/transaction.md#delete-transaction-delete) |
+| `/category_trans?category_name=<>&email=<>` | ✅ Complete | 2024-12-11 [View Docs](https://github.com/FinTrak-Solutions/Backend/blob/main/Documentation/docs/transaction.md#get-category-transactions-get) |
+| `/account_trans?account_name=<>&email=<>` | ✅ Complete | 2024-12-11 [View Docs](https://github.com/FinTrak-Solutions/Backend/blob/main/Documentation/docs/transaction.md#get-account-transactions-get) |
 
 ---
 
