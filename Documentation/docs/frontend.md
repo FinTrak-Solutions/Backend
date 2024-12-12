@@ -42,14 +42,14 @@ TUI/
 | Signup            | Damian        |                 |
 | Login             | Damian        |                 |
 | Home              | Damian        |                 |
-| Account           |               |                 |
-| Account Detail    |               |                 |
-| Create Account    |               |                 |
-| Category          |               |                 |
-| Category Detail   |               |                 |
-| Create Category   |               |                 |
-| Create Transaction|               |                 |
-| Report            | Damian        |                 |
+| Account           | Ellen         |                 |
+| Account Detail    | Ellen         |                 |
+| Create Account    | Ellen         |                 |
+| Category          | TBD           |                 |
+| Category Detail   | TBD           |                 |
+| Create Category   | TBD           |                 |
+| Create Transaction| Damian        |                 |
+| Report            | Sarah         |                 |
 
 
 ---
