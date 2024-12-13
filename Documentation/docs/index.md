@@ -42,7 +42,6 @@ This documentation outlines the backend structure, API endpoints, project layout
 | `/account_create`                          | ✅ Complete | 2024-12-07 3:10pm   | [View Docs](account/#create-new-account-for-user-post)|
 | `/account_summary?email=<>`                | ✅ Complete | 2024-12-07 3:40pm   | [View Docs](account/#get-account-overview-for-user-get)|
 | `/delete_account?email=<>&account_name=<>` | ✅ Complete | 2024-12-07 4:20pm   | [View Docs](account/#delete-an-account-for-user-delete)|
-| `/account_detail`                          | ❌ In Progress | TBD               | [View Docs](account/#get-account-detailed-view-for-user-get) |
 
 ---
 
@@ -57,9 +56,10 @@ This documentation outlines the backend structure, API endpoints, project layout
 ---
 
 ### 💸 **Transaction Management**
-| **API**                                    | **Status**    | **Time Finished**  | **Link to Docs**                          |
-|--------------------------------------------|---------------|---------------------|------------------------------------------|
-| TBD                                       | 🚧 In Progress | TBD                 | N/A                                      |
+| **API**                                    | **Status**  | **Time Finished** | **Link to Docs**                                |
+|--------------------------------------------|-------------|-------------------|-------------------------------------------------|
+| `/add_trans`                               | ✅ Complete  | 2024-12-12        | [View Docs](transaction/#create-new-transaction-post) |
+| `/delete_trans?<delete_query..>`           | ✅ Complete  | 2024-12-12        | [View Docs](transaction/#delete-transaction-delete)                                   |
 
 ---
 
