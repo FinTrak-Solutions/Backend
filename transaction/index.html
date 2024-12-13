@@ -80,6 +80,22 @@
     </li>
         </ul>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-category-transactions-get">Get Category Transactions GET</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_2">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response_2">Response:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-account-transactions-get">Get Account Transactions GET</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#api_3">API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#response_3">Response:</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -169,6 +185,42 @@
 <li>Otherwise:<ul>
 <li><code>STATUS_CODE</code>: <code>INTERNAL_SERVER_ERROR (500)</code></li>
 <li><code>Message</code>: "Failed to delete the transaction"</li>
+</ul>
+</li>
+</ul>
+<h2 id="get-category-transactions-get">Get Category Transactions <code>GET</code><a class="headerlink" href="#get-category-transactions-get" title="Permanent link">&para;</a></h2>
+<h4 id="api_2">API<a class="headerlink" href="#api_2" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/category_trans?category_name=&lt;&gt;&amp;email=&lt;&gt;
+</code></pre>
+
+<h4 id="response_2">Response:<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>email or category name not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Json&lt;Vec&lt;Transaction&gt;&gt;</code>: Empty</li>
+</ul>
+</li>
+<li>transactions successfully extracted:<ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code></li>
+<li><code>Json&lt;Vec&lt;Transaction&gt;&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="get-account-transactions-get">Get Account Transactions <code>GET</code><a class="headerlink" href="#get-account-transactions-get" title="Permanent link">&para;</a></h2>
+<h4 id="api_3">API<a class="headerlink" href="#api_3" title="Permanent link">&para;</a></h4>
+<pre class="codehilite"><code>/account_trans?account_name=&lt;&gt;&amp;email=&lt;&gt;
+</code></pre>
+
+<h4 id="response_3">Response:<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li>account name or email not found:<ul>
+<li><code>STATUS_CODE</code>: <code>BAD_REQUEST (400)</code></li>
+<li><code>Json&lt;Vec&lt;Transaction&gt;&gt;</code>: Empty</li>
+</ul>
+</li>
+<li>transactions successfully extracted:<ul>
+<li><code>STATUS_CODE</code>: <code>OK (200)</code></li>
+<li><code>Json&lt;Vec&lt;Transaction&gt;&gt;</code></li>
 </ul>
 </li>
 </ul>
