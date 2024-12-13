@@ -11,7 +11,7 @@ mod schema;
 use routes::account::{account_create, account_summary, delete_account};
 use routes::auth::signup;
 use routes::category::{category_create, category_summary, category_update, delete_category};
-use routes::report::report_overview;
+use routes::report::{report_details, report_overview};
 use routes::transaction::{account_summary_trans, add_trans, category_summary_trans, delete_trans};
 
 #[get("/livereload/<_..>")]
@@ -45,4 +45,5 @@ fn rocket() -> _ {
         .mount("/", routes![category_summary_trans])
         .mount("/", routes![account_summary_trans])
         .mount("/", routes![report_overview])
+        .mount("/", routes![report_details])
 }
