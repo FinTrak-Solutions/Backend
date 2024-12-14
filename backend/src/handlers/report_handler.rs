@@ -1,5 +1,8 @@
 use crate::db::DbPool;
+use crate::models::account::Account;
+use crate::models::category::Category;
 use crate::models::user::User;
+use crate::schema::accounts::dsl::*; // For accounts table
 use crate::schema::categories::dsl::*; // For categories table
 use crate::schema::transactions::dsl::*;
 use crate::schema::users::dsl::{email as user_email, users}; // For users table
@@ -51,6 +54,77 @@ pub async fn check_email_valid(email_str: String, pool: DbPool) -> (Status, Stri
     }
 }
 
+pub async fn check_category_name(email_str: String, cat_id: i32, pool: DbPool) -> (Status, String) {
+    // get category id from category name
+    let category_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let cat_to_check = cat_id.clone();
+        let email_to_check = email_str.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            categories
+                .filter(crate::schema::categories::dsl::email.eq(email_to_check))
+                .filter(crate::schema::categories::dsl::category_id.eq(cat_to_check))
+                .first::<Category>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    let _ = match category_exists {
+        Ok(Ok(None)) => {
+            // No category found for this name
+            return (Status::BadRequest, "".to_string());
+        }
+        Ok(Ok(Some(match_category))) => {
+            // User found, proceed to category name existence check
+            return (Status::Ok, match_category.nickname);
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking category existence: {:?}", e);
+            return (Status::InternalServerError, "".to_string());
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during user check: {:?}", e);
+            return (Status::InternalServerError, "".to_string());
+        }
+    };
+}
+
+pub async fn check_account_name(email_str: String, acc_id: i32, pool: DbPool) -> (Status, String) {
+    let account_exists = tokio::task::spawn_blocking({
+        let pool = pool.clone();
+        let email_to_check = email_str.clone();
+        let acc_to_check = acc_id.clone();
+        move || {
+            let mut conn = pool.get().expect("Failed to get database connection");
+            accounts
+                .filter(crate::schema::accounts::dsl::email.eq(email_to_check))
+                .filter(crate::schema::accounts::dsl::account_id.eq(acc_to_check))
+                .first::<Account>(&mut conn)
+                .optional()
+        }
+    })
+    .await;
+
+    let _ = match account_exists {
+        Ok(Ok(None)) => {
+            return (Status::BadRequest, "".to_string());
+        }
+        Ok(Ok(Some(match_acc))) => {
+            return (Status::Ok, match_acc.account_name);
+        }
+        Ok(Err(e)) => {
+            eprintln!("Error checking account existence: {:?}", e);
+            return (Status::InternalServerError, "".to_string());
+        }
+        Err(e) => {
+            eprintln!("Blocking task failed during user check: {:?}", e);
+            return (Status::InternalServerError, "".to_string());
+        }
+    };
+}
+
 // GET /report_overview?email=<>
 pub async fn handle_report_overview(
     email_str: String,
@@ -76,7 +150,7 @@ pub async fn handle_report_overview(
             // nullable types: https://docs.diesel.rs/1.4.x/diesel/sql_types/struct.Nullable.html
             transactions
                 .filter(crate::schema::transactions::dsl::email.eq(email_to_search))
-                .group_by((crate::schema::transactions::dsl::category_id,))
+                .group_by(crate::schema::transactions::dsl::category_id)
                 .select((
                     crate::schema::transactions::dsl::category_id,
                     sum(crate::schema::transactions::dsl::amount),
@@ -91,7 +165,14 @@ pub async fn handle_report_overview(
             // Successfully retrieved accounts
             for &(cat_id, cat_sum) in trans_list.iter() {
                 if let Some(valid_sum) = cat_sum {
-                    let cat_line = format!("{}: {}", cat_id, valid_sum);
+                    // convert category ID to category name
+                    let (cat_status, cat_name) =
+                        check_category_name(email_str.clone(), cat_id.clone(), pool.clone()).await;
+
+                    if cat_status != Status::Ok {
+                        return (Status::BadRequest, Json(vec![]));
+                    }
+                    let cat_line = format!("{} : {}", cat_name, valid_sum);
                     summary.push(cat_line);
                 }
             }
@@ -136,7 +217,14 @@ pub async fn handle_report_overview(
             // Successfully retrieved accounts
             for &(acc_id, acc_sum) in trans_list.iter() {
                 if let Some(valid_sum) = acc_sum {
-                    let acc_line = format!("{}: {}", acc_id, valid_sum);
+                    // convert account ID to account name
+                    let (acc_status, acc_name) =
+                        check_account_name(email_str.clone(), acc_id.clone(), pool.clone()).await;
+
+                    if acc_status != Status::Ok {
+                        return (Status::BadRequest, Json(vec![]));
+                    }
+                    let acc_line = format!("{}: {}", acc_name, valid_sum);
                     summary.push(acc_line);
                 }
             }

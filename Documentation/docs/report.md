@@ -10,7 +10,16 @@
     - `Json<Vec<String>>`: Empty
 - Successfully extracted:
     - `STATUS_CODE`: `OK (200)`
-    - `Json<Vec<String>>`: Json<["Account Summary:", "td_debit: -$3200", "Category Summary: ", "food: -$200", "clothes: -$300"]>
+    - `Json<Vec<String>>`: Example output
+```
+[
+    "Category Summary:",
+    "clothes : 1370.34",
+    "food : 3751.419999999999",
+    "Account Summary:",
+    "td_credit: 5121.759999999999"
+]
+```
 
 ## Report Details `GET`
 #### API
