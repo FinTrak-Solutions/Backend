@@ -253,6 +253,7 @@ pub struct SummaryEntry {
     pub transaction_date: String,
     pub amount: f64,
     pub notes: Option<String>,
+    pub transaction_id: i32,
 }
 
 #[derive(Debug, Queryable, Serialize, Deserialize, Clone)]
@@ -262,6 +263,9 @@ pub struct CategorySummary {
     pub budget_freq: String,
     pub overbudget: bool,
     pub total: f64,
+    // a vector of transaction IDs corresponding to the trans summary below
+    // added for easier deletion of transaction through report page
+    pub transaction_idz: Vec<i32>,
     // a vector of all the relevant transactions within budget freq frame
     pub cat_trans: Vec<String>,
 }
@@ -296,6 +300,7 @@ pub async fn handle_report_details(
                     crate::schema::transactions::dsl::transaction_date,
                     crate::schema::transactions::dsl::amount,
                     crate::schema::transactions::dsl::notes,
+                    crate::schema::transactions::dsl::trans_id,
                 ))
                 .order_by((
                     crate::schema::transactions::dsl::category_id,
@@ -328,6 +333,7 @@ pub async fn handle_report_details(
                                 budget_freq: sum_entry.budget_freq.clone(),
                                 overbudget: false,
                                 total: 0.0,
+                                transaction_idz: vec![],
                                 cat_trans: vec![],
                             };
                             cat_summary_dict.insert(sum_entry.nickname.clone(), new_cat.clone());
@@ -338,6 +344,8 @@ pub async fn handle_report_details(
                 let budget_freq_str = curr_cat_sum.budget_freq.as_str();
                 let budget_timeframe = match budget_freq_str {
                     "weekly" => 7.0 * 24.0 * 60.0,
+                    // add frequency
+                    "daily" => 1.0 * 24.0 * 60.0,
                     "monthly" => 30.0 * 24.0 * 60.0,
                     "yearly" => 365.0 * 24.0 * 60.0,
                     _ => f64::INFINITY,
@@ -362,6 +370,7 @@ pub async fn handle_report_details(
                     None => format!("{}, {}, ", sum_entry.transaction_date, sum_entry.amount,),
                 };
                 curr_cat_sum.cat_trans.push(curr_line);
+                curr_cat_sum.transaction_idz.push(sum_entry.transaction_id);
                 // refresh the summary copy
                 cat_summary_dict.insert(sum_entry.nickname.clone(), curr_cat_sum.clone());
             }
